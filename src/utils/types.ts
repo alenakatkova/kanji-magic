@@ -19,3 +19,13 @@ export interface KanjiByPronunciationAndRadicals {
   pronunciation: string;
   radicals: Radical[];
 }
+
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
+export interface ColorScheme {
+  background: string;
+  text: string;
+}

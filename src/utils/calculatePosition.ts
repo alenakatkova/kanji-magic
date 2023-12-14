@@ -2,7 +2,7 @@ import { Positions } from "./types.ts";
 
 function getAngleInRadians(amountOfElements: number, index: number) {
   const angle = (360 / amountOfElements) * index;
-  return (angle * Math.PI) / 180;
+  return (angle * Math.PI) / 180 + 2;
 }
 
 export function calculatePosition(

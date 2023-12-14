@@ -8,18 +8,18 @@ const SVG = {
 };
 
 const MAIN_CIRCLE = {
-  RADIUS: 200,
+  RADIUS: 180,
   CX: SVG.WIDTH / 2,
   CY: SVG.HEIGHT / 2,
   STROKE_WIDTH: 10,
-  STROKE_COLOR: "red",
+  STROKE_COLOR: "lightgray",
   FILL: "transparent",
 };
 
 const SUB_CIRCLE = {
-  RADIUS: MAIN_CIRCLE.RADIUS / 2.5,
+  RADIUS: MAIN_CIRCLE.RADIUS / 2,
   STROKE_WIDTH: 10,
-  STROKE_COLOR: "red",
+  STROKE_COLOR: "lightgray",
   FILL: "transparent",
 };
 
@@ -27,142 +27,206 @@ function getAngleInRadians(amountOfElements: number, index: number) {
   const angle = (360 / amountOfElements) * index;
   return (angle * Math.PI) / 180;
 }
-function getXPositionOnMainCircle(
-  amountOfElements: number,
-  index: number,
-  radius: number,
-) {
-  const radians = getAngleInRadians(amountOfElements, index);
-  return MAIN_CIRCLE.CX + radius * Math.cos(radians);
+
+enum Positions {
+  X,
+  Y,
 }
 
-function getXPositionOnSubCircle(
+function calculatePosition(
+  position: Positions,
   amountOfElements: number,
   index: number,
   radius: number,
-  subCircleCX: number,
+  circleCenter: number,
 ) {
-  console.log(amountOfElements, index, radius, subCircleCX);
   const radians = getAngleInRadians(amountOfElements, index);
-  console.log(radians);
-  return subCircleCX + radius * Math.cos(radians);
+  return position === Positions.X
+    ? circleCenter + radius * Math.cos(radians)
+    : circleCenter + radius * Math.sin(radians);
 }
 
-function getYPositionOnSubCircle(
-  amountOfElements: number,
-  index: number,
-  radius: number,
-  subCircleCY: number,
-) {
-  let offset;
-  if (index === 0 || index === amountOfElements / 2) {
-    offset = 0;
-  } else if (index < amountOfElements / 2) {
-    offset = subCircleCY;
-  } else {
-    offset = -subCircleCY;
-  }
-  const radians = getAngleInRadians(amountOfElements, index);
-  console.log(radians);
-  return subCircleCY + radius * Math.sin(radians);
-}
-
-function getYPositionOnMainCircle(
-  amountOfElements: number,
-  index: number,
-  radius: number,
-) {
-  const radians = getAngleInRadians(amountOfElements, index);
-  return MAIN_CIRCLE.CY + radius * Math.sin(radians);
-}
 function App() {
   return (
     <>
       {pronunciations.map((pronunciation) => (
         <div
           key={pronunciation.pronunciation}
-          style={{ boxSizing: "border-box", width: SVG.WIDTH }}
+          style={{
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "row",
+            borderTop: "10px solid lightgray",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "50px",
+          }}
         >
-          <svg
-            viewBox={`0 0 ${SVG.WIDTH} ${SVG.HEIGHT}`}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx={MAIN_CIRCLE.CX}
-              cy={MAIN_CIRCLE.CY}
-              r={MAIN_CIRCLE.RADIUS}
-              fill={MAIN_CIRCLE.FILL}
-              stroke={MAIN_CIRCLE.STROKE_COLOR}
-              strokeWidth={MAIN_CIRCLE.STROKE_WIDTH}
-            />
-            <text x={MAIN_CIRCLE.CX} y={MAIN_CIRCLE.CY} textAnchor="middle">
-              {pronunciation.pronunciation}
-            </text>
-            {pronunciation.radicals.map((radical, index) => (
-              <g key={radical.base}>
+          <div>
+            <h2>Pronunciation: {pronunciation.pronunciation}</h2>
+            <ol>
+              {pronunciation.radicals.map((radical) => (
+                <li>
+                  {radical.base}
+                  <ul>
+                    {radical.includedIn.map((kanji) => (
+                      <li>{kanji.kanji}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div style={{ width: "40%" }}>
+            {pronunciation.radicals.length === 1 ? (
+              <svg
+                viewBox={`0 0 ${SVG.WIDTH} ${SVG.HEIGHT}`}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx={MAIN_CIRCLE.CX}
+                  cy={MAIN_CIRCLE.CY}
+                  r={MAIN_CIRCLE.RADIUS}
+                  fill={MAIN_CIRCLE.FILL}
+                  stroke={MAIN_CIRCLE.STROKE_COLOR}
+                  strokeWidth={MAIN_CIRCLE.STROKE_WIDTH}
+                />
                 <text
-                  x={getXPositionOnMainCircle(
-                    pronunciation.radicals.length,
-                    index,
-                    MAIN_CIRCLE.RADIUS,
-                  )}
-                  y={getYPositionOnMainCircle(
-                    pronunciation.radicals.length,
-                    index,
-                    MAIN_CIRCLE.RADIUS,
-                  )}
+                  x={MAIN_CIRCLE.CX}
+                  y={MAIN_CIRCLE.CY + 20}
                   textAnchor="middle"
                 >
-                  {radical.base}
+                  {pronunciation.radicals[0].base}
                 </text>
-                <circle
-                  cx={getXPositionOnMainCircle(
-                    pronunciation.radicals.length,
-                    index,
-                    MAIN_CIRCLE.RADIUS,
-                  )}
-                  cy={getYPositionOnMainCircle(
-                    pronunciation.radicals.length,
-                    index,
-                    MAIN_CIRCLE.RADIUS,
-                  )}
-                  r={SUB_CIRCLE.RADIUS}
-                  stroke={SUB_CIRCLE.STROKE_COLOR}
-                  fill={SUB_CIRCLE.FILL}
-                  strokeWidth={SUB_CIRCLE.STROKE_WIDTH}
-                />
-                {radical.includedIn.map((word, i) => (
-                  <g key={word}>
+                <text
+                  x={MAIN_CIRCLE.CX}
+                  y={MAIN_CIRCLE.CY - 20}
+                  textAnchor="middle"
+                >
+                  ({pronunciation.pronunciation})
+                </text>
+
+                {pronunciation.radicals[0].includedIn.map((radical, index) => (
+                  <g key={radical.kanji}>
                     <text
-                      x={getXPositionOnSubCircle(
-                        radical.includedIn.length,
-                        i,
-                        SUB_CIRCLE.RADIUS,
-                        getXPositionOnMainCircle(
-                          pronunciation.radicals.length,
-                          index,
-                          MAIN_CIRCLE.RADIUS,
-                        ),
+                      x={calculatePosition(
+                        Positions.X,
+                        pronunciation.radicals[0].includedIn.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CX,
                       )}
-                      y={getYPositionOnSubCircle(
-                        radical.includedIn.length,
-                        i,
-                        SUB_CIRCLE.RADIUS,
-                        getYPositionOnMainCircle(
-                          pronunciation.radicals.length,
-                          index,
-                          MAIN_CIRCLE.RADIUS,
-                        ),
+                      y={calculatePosition(
+                        Positions.Y,
+                        pronunciation.radicals[0].includedIn.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CY,
                       )}
                       textAnchor="middle"
                     >
-                      {word}
+                      {radical.kanji}
                     </text>
                   </g>
                 ))}
-              </g>
-            ))}
-          </svg>
+              </svg>
+            ) : (
+              <svg
+                viewBox={`0 0 ${SVG.WIDTH} ${SVG.HEIGHT}`}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx={MAIN_CIRCLE.CX}
+                  cy={MAIN_CIRCLE.CY}
+                  r={MAIN_CIRCLE.RADIUS}
+                  fill={MAIN_CIRCLE.FILL}
+                  stroke={MAIN_CIRCLE.STROKE_COLOR}
+                  strokeWidth={MAIN_CIRCLE.STROKE_WIDTH}
+                />
+                <text x={MAIN_CIRCLE.CX} y={MAIN_CIRCLE.CY} textAnchor="middle">
+                  {pronunciation.pronunciation}
+                </text>
+                {pronunciation.radicals.map((radical, index) => (
+                  <g key={radical.base}>
+                    <text
+                      x={calculatePosition(
+                        Positions.X,
+                        pronunciation.radicals.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CX,
+                      )}
+                      y={calculatePosition(
+                        Positions.Y,
+                        pronunciation.radicals.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CY,
+                      )}
+                      textAnchor="middle"
+                    >
+                      {radical.base}
+                    </text>
+                    <circle
+                      cx={calculatePosition(
+                        Positions.X,
+                        pronunciation.radicals.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CX,
+                      )}
+                      cy={calculatePosition(
+                        Positions.Y,
+                        pronunciation.radicals.length,
+                        index,
+                        MAIN_CIRCLE.RADIUS,
+                        MAIN_CIRCLE.CY,
+                      )}
+                      r={SUB_CIRCLE.RADIUS}
+                      stroke={SUB_CIRCLE.STROKE_COLOR}
+                      fill={SUB_CIRCLE.FILL}
+                      strokeWidth={SUB_CIRCLE.STROKE_WIDTH}
+                    />
+                    {radical.includedIn.map((word, i) => (
+                      <g key={word.kanji}>
+                        <text
+                          x={calculatePosition(
+                            Positions.X,
+                            radical.includedIn.length,
+                            i,
+                            SUB_CIRCLE.RADIUS,
+                            calculatePosition(
+                              Positions.X,
+                              pronunciation.radicals.length,
+                              index,
+                              MAIN_CIRCLE.RADIUS,
+                              MAIN_CIRCLE.CX,
+                            ),
+                          )}
+                          y={calculatePosition(
+                            Positions.Y,
+                            radical.includedIn.length,
+                            i,
+                            SUB_CIRCLE.RADIUS,
+                            calculatePosition(
+                              Positions.Y,
+                              pronunciation.radicals.length,
+                              index,
+                              MAIN_CIRCLE.RADIUS,
+                              MAIN_CIRCLE.CY,
+                            ),
+                          )}
+                          textAnchor="middle"
+                        >
+                          {word.kanji}
+                        </text>
+                      </g>
+                    ))}
+                  </g>
+                ))}
+              </svg>
+            )}
+          </div>
         </div>
       ))}
     </>

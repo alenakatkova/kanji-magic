@@ -2,15 +2,24 @@ import { SVG, MAIN_CIRCLE, colors } from "../utils/constants.ts";
 import { KanjiByPronunciationAndRadicals, Positions } from "../utils/types.ts";
 import { calculatePosition } from "../utils/calculatePosition.ts";
 import RadicalSVGElement from "./RadicalSVGElement.tsx";
+import { useEffect, useState } from "react";
 
 interface Props {
   kanjiByPronunciationAndRadicals: KanjiByPronunciationAndRadicals;
 }
 
 function MultipleRadicalsSchemeV1({ kanjiByPronunciationAndRadicals }: Props) {
+  const [colorScheme, setColorScheme] = useState({
+    background: "black",
+    text: "black",
+  });
   function getCircleColor() {
-    return colors[0];
+    return colors[Math.floor(Math.random() * colors.length)];
   }
+
+  useEffect(() => {
+    setColorScheme(getCircleColor);
+  }, []);
 
   return (
     <svg
@@ -21,7 +30,19 @@ function MultipleRadicalsSchemeV1({ kanjiByPronunciationAndRadicals }: Props) {
         cx={MAIN_CIRCLE.CX}
         cy={MAIN_CIRCLE.CY}
         r={MAIN_CIRCLE.RADIUS}
-        fill={getCircleColor().background}
+        fill={colorScheme.background}
+      />
+      <circle
+        cx={MAIN_CIRCLE.CX}
+        cy={MAIN_CIRCLE.CY}
+        r={MAIN_CIRCLE.RADIUS - 5}
+        fill={"white"}
+      />
+      <circle
+        cx={MAIN_CIRCLE.CX}
+        cy={MAIN_CIRCLE.CY}
+        r={MAIN_CIRCLE.RADIUS - 10}
+        fill={colorScheme.background}
       />
 
       {kanjiByPronunciationAndRadicals.radicals.map((radical, index) => (
@@ -45,7 +66,7 @@ function MultipleRadicalsSchemeV1({ kanjiByPronunciationAndRadicals }: Props) {
             ),
           }}
           mainCircleCenterPosition={{ x: MAIN_CIRCLE.CX, y: MAIN_CIRCLE.CY }}
-          colorScheme={getCircleColor()}
+          colorScheme={colorScheme}
         />
       ))}
       <text

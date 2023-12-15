@@ -46,6 +46,30 @@ function KanjiSVGElement({
         r={KANJI.CIRCLE_RADIUS}
         fill={colorScheme.background}
       />
+      {/*<rect*/}
+      {/*  rx={20}*/}
+      {/*  width={KANJI.RECT_WIDTH}*/}
+      {/*  height={KANJI.RECT_HEIGHT}*/}
+      {/*  x={endLineX - KANJI.CIRCLE_RADIUS}*/}
+      {/*  y={endLineY - KANJI.CIRCLE_RADIUS}*/}
+      {/*  fill={colorScheme.background}*/}
+      {/*/>*/}
+      {/*<rect*/}
+      {/*  rx={15}*/}
+      {/*  width={KANJI.RECT_WIDTH - 10}*/}
+      {/*  height={KANJI.RECT_HEIGHT - 10}*/}
+      {/*  x={endLineX - KANJI.CIRCLE_RADIUS + 5}*/}
+      {/*  y={endLineY - KANJI.CIRCLE_RADIUS + 5}*/}
+      {/*  fill={"white"}*/}
+      {/*/>*/}
+      {/*<rect*/}
+      {/*  rx={10}*/}
+      {/*  width={KANJI.RECT_WIDTH - 20}*/}
+      {/*  height={KANJI.RECT_HEIGHT - 20}*/}
+      {/*  x={endLineX - KANJI.CIRCLE_RADIUS + 10}*/}
+      {/*  y={endLineY - KANJI.CIRCLE_RADIUS + 10}*/}
+      {/*  fill={colorScheme.background}*/}
+      {/*/>*/}
       <text
         x={endLineX}
         y={endLineY + RADICAL.FONT_SIZE / 2 - 10}

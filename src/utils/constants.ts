@@ -1,10 +1,10 @@
 export const SVG = {
-  WIDTH: 1500,
-  HEIGHT: 1500,
+  WIDTH: 1800,
+  HEIGHT: 1800,
 };
 
 export const MAIN_CIRCLE = {
-  RADIUS: 60,
+  RADIUS: 70,
   CX: SVG.WIDTH / 2,
   CY: SVG.HEIGHT / 2,
   STROKE_WIDTH: 10,
@@ -31,14 +31,16 @@ export const colors = [
 
 export const RADICAL = {
   FONT_SIZE: 50,
-  CIRCLE_RADIUS: 100,
-  ARROW_LENGTH: 300,
-  LINE_WIDTH: 10,
+  CIRCLE_RADIUS: 130,
+  ARROW_LENGTH: 450,
+  LINE_WIDTH: 1,
 };
 
 export const KANJI = {
   FONT_SIZE: 50,
-  CIRCLE_RADIUS: 100,
-  ARROW_LENGTH: 120,
-  LINE_WIDTH: 7,
+  CIRCLE_RADIUS: 120,
+  ARROW_LENGTH: 80,
+  LINE_WIDTH: 1,
+  RECT_HEIGHT: 200,
+  RECT_WIDTH: 250,
 };

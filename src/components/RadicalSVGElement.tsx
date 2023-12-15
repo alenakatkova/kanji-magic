@@ -53,15 +53,39 @@ function RadicalSVGElement({
         r={RADICAL.CIRCLE_RADIUS}
         fill={colorScheme.background}
       />
+
       <text
         x={circleCenterX}
-        y={circleCenterY + RADICAL.FONT_SIZE / 2 - 10}
+        y={circleCenterY - RADICAL.FONT_SIZE}
         textAnchor="middle"
         fill={colorScheme.text}
         fontSize={RADICAL.FONT_SIZE}
       >
         {radical.base}
       </text>
+      {radical.keyword && (
+        <text
+          x={circleCenterX}
+          y={circleCenterY + RADICAL.FONT_SIZE * 0.3}
+          textAnchor="middle"
+          fill={colorScheme.text}
+          fontSize={RADICAL.FONT_SIZE}
+          fontWeight={600}
+        >
+          {radical.keyword}
+        </text>
+      )}
+      {radical.keywordPronunciation && (
+        <text
+          x={circleCenterX}
+          y={circleCenterY + RADICAL.FONT_SIZE * 1.2}
+          textAnchor="middle"
+          fill={colorScheme.text}
+          fontSize={RADICAL.FONT_SIZE - 20}
+        >
+          ({radical.keywordPronunciation})
+        </text>
+      )}
 
       {radical.includedIn.map((kanji, i) => (
         <KanjiSVGElement
